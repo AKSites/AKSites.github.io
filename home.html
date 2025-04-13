@@ -176,20 +176,27 @@
             transform: translateY(-2px);
         }
         
-        .copy-tooltip {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            background-color: var(--primary);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 14px;
-            opacity: 0;
-            transition: var(--transition);
-            pointer-events: none;
-            z-index: 9999; /* Makes sure it appears above other elements */
-        }
+/* Your existing tooltip CSS */
+.copy-tooltip {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background-color: var(--primary);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    transition: var(--transition);
+    pointer-events: none;
+    z-index: 9999; /* Makes sure it appears above other elements */
+}
+
+/* Add this to make the tooltip visible when parent is hovered or has an active class */
+.copy-container:hover .copy-tooltip,
+.copy-container.active .copy-tooltip {
+    opacity: 1;
+}
 
         .copy-tooltip.active {
             opacity: 1;
