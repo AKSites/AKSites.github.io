@@ -175,7 +175,7 @@
             background-color: var(--primary);
             transform: translateY(-2px);
         }
-
+        
         .copy-tooltip {
             position: absolute;
             top: -40px;
@@ -188,6 +188,7 @@
             opacity: 0;
             transition: var(--transition);
             pointer-events: none;
+            z-index: 9999; /* Makes sure it appears above other elements */
         }
 
         .copy-tooltip.active {
@@ -205,8 +206,9 @@
             right: 60px;
             font-size: 14px;
             opacity: 0;
-            transition: var(--transition);
+    transition: var(--transition);
             pointer-events: none;
+            z-index: 9999; /* Same here for the copied message */
         }
 
         .copied-message.active {
