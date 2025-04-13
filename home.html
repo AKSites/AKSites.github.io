@@ -3,243 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AK Admin - Ultimate Admin Script</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>AK Admin - Ultimate Roblox Admin Script</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        :root {
+            --primary: #6c63ff;
+            --primary-light: #8b85ff;
+            --secondary: #ff6584;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light-text: #e9e9e9;
+            --muted-text: #828282;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #13151a 0%, #1e2127 100%);
-            color: #fff;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--light-text);
+            overflow-x: hidden;
             line-height: 1.6;
         }
 
-        .nav {
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .bg-gradient {
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            background: rgba(20, 22, 26, 0.98);
-            padding: 1.2rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.2);
-            z-index: 100;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(108, 99, 255, 0.2), transparent 60%),
+                         radial-gradient(circle at bottom left, rgba(255, 101, 132, 0.15), transparent 60%);
+            z-index: 0;
         }
 
-        .nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 20px;
-            padding: 8px 20px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            background: rgba(255,255,255,0.1);
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
         }
 
-        .nav a:hover {
-            background: rgba(255,255,255,0.2);
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            max-width: 700px;
+            margin-bottom: 40px;
+            color: var(--muted-text);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--primary);
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .script-section {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .script-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .script-container {
+            position: relative;
+            width: 100%;
+            background-color: var(--darker);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+                        0 0 20px rgba(108, 99, 255, 0.1);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .script-container pre {
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #e9e9e9;
+            padding-right: 40px;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(108, 99, 255, 0.2);
+            border: none;
+            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--light-text);
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary);
             transform: translateY(-2px);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 100px auto 0;
-            padding: 20px;
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
-
-        .section {
-            background: rgba(255,255,255,0.05);
-            padding: 40px;
-            border-radius: 20px;
-            margin: 30px 0;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .faq-item {
-            margin: 15px 0;
-        }
-
-        .faq-question {
-            background: rgba(255,255,255,0.08);
-            padding: 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .faq-question:hover {
-            background: rgba(255,255,255,0.12);
-            transform: translateX(5px);
-        }
-
-        .faq-answer {
-            display: none;
-            padding: 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 0 0 12px 12px;
-            margin-top: 2px;
-            color: #a8b2c1;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .highlight {
-            background: linear-gradient(90deg, #00ff9d, #00c3ff);
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
-        h1, h2 {
-            margin-bottom: 1.5rem;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        ul li {
-            padding: 10px 0;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        ul li:before {
-            content: "→";
+        .copy-tooltip {
             position: absolute;
-            left: 0;
-            color: #00ff9d;
+            top: -40px;
+            right: 0;
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .copy-tooltip.active {
+            opacity: 1;
+            top: -30px;
+        }
+
+        .copied-message {
+            position: absolute;
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            top: 15px;
+            right: 60px;
+            font-size: 14px;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .copied-message.active {
+            opacity: 1;
+        }
+
+        .micup-section {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .micup-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .micup-section p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--muted-text);
+            max-width: 700px;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--darker);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.05),
+                        0 0 10px rgba(108, 99, 255, 0.05);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .dropdown-item:hover {
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+                        0 0 15px rgba(108, 99, 255, 0.15);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .dropdown-arrow {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .dropdown-arrow svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--muted-text);
+            transition: var(--transition);
+        }
+
+        .dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            color: var(--muted-text);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .dropdown-item.active .dropdown-content {
+            max-height: 300px;
+            padding: 0 20px 20px;
+            opacity: 1;
+        }
+
+        .dropdown-item.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-item.active .dropdown-arrow svg {
+            fill: var(--primary);
+        }
+
+        .faq-section {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .faq-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .social-section {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .discord-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
+        }
+
+        .discord-btn:hover {
+            background-color: #4752C4;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(88, 101, 242, 0.6);
+        }
+
+        .discord-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        footer {
+            padding: 20px;
+            text-align: center;
+            color: var(--muted-text);
+            font-size: 14px;
+            opacity: 0;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
+            .hero {
+                min-height: 80vh;
             }
-            .section {
-                padding: 25px;
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .script-container {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="nav">
-        <a href="#home">Home</a>
-        <a href="#faq">FAQ</a>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    
+    <div class="container">
+        <section class="hero">
+            <div class="glow" style="top: 30%; left: 20%"></div>
+            <div class="glow" style="bottom: 30%; right: 20%"></div>
+            
+            <h1>AK Admin – The Ultimate Roblox Admin Script</h1>
+            <p>Experience the power of next-gen admin commands. AK Admin works on all executors and is built for performance, reliability, and style.</p>
+        </section>
+
+        <section class="script-section">
+            <h2>Use the Script</h2>
+            <div class="script-container">
+                <pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/LOLkeeptrying/AKADMIN/main/Congratslol"))()</pre>
+                <button class="copy-btn" id="copyBtn" aria-label="Copy to clipboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                </button>
+                <div class="copy-tooltip">Copy to Clipboard</div>
+                <div class="copied-message">Copied!</div>
+            </div>
+        </section>
+
+        <section class="micup-section">
+            <h2>Best Mic-Up Scripts for Roblox</h2>
+            <p>Mic-up scripts are popular for enhancing voice chat experiences or trolling in Roblox. Here are some of the best options available:</p>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Reanimation
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    This script allows you to "reanimate" your avatar and perform cool movements and animations.
+                </div>
+            </div>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    FE Snake Body
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    Use this to give your avatar the appearance of a snake body, making your Roblox character long and slithering like a snake.
+                </div>
+            </div>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Letter Body
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    This script changes your avatar's body into letters.
+                </div>
+            </div>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Hide Map
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    With this script, you can hide the entire game map, making it invisible to all players in the game.
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Is AK Admin safe?
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    Yes, AK Admin is fully secure and frequently updated.
+                </div>
+            </div>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Which executors are supported?
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    All executors are supported by us.
+                </div>
+            </div>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Do I need to configure anything?
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    Nope. Just paste and run. It's plug-and-play.
+                </div>
+            </div>
+            
+            <div class="dropdown-item">
+                <div class="dropdown-header">
+                    Are mic-up scripts included?
+                    <div class="dropdown-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    Yes.
+                </div>
+            </div>
+        </section>
+
+        <section class="social-section">
+            <a href="https://discord.gg/kytwxYsKhK" class="discord-btn" target="_blank" rel="noopener noreferrer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+                    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z" fill="#fff"/>
+                </svg>
+                Join Our Community on Discord
+            </a>
+        </section>
+
+        <footer>
+            All rights reserved © 2025
+        </footer>
     </div>
 
-    <div class="container">
-        <section id="home" class="section">
-            <h1><span class="highlight" style="background-clip: text; -webkit-background-clip: text;">AK Admin</span> - The Ultimate Admin Script</h1>
-            <p>Experience the most powerful admin script that outperforms every micup script available.</p>
-            <h2>Why Choose AK Admin?</h2>
-            <ul>
-            <li>Superior performance and stability</li>
-            <li>Advanced command system</li>
-            <li>Regular updates and support</li>
-            <li>Bypass most anti-exploits</li>
-            </ul>
-            <a href="https://discord.gg/Rd65gmffEA" class="discord-btn" target="_blank">Join Our Discord</a>
-            <style>
-            .discord-btn {
-                display: inline-block;
-                padding: 15px 30px;
-                border-radius: 50px;
-                text-decoration: none;
-                color: white;
-                font-weight: bold;
-                background: linear-gradient(90deg, #7289da, #5865F2, #7289da);
-                background-size: 200% 100%;
-                animation: gradientMove 3s linear infinite, spin 10s linear infinite;
-                transition: transform 0.3s ease;
-                margin-top: 20px;
-            }
-            .discord-btn:hover {
-                transform: scale(1.05);
-            }
-            @keyframes gradientMove {
-                0% { background-position: 0% 50%; }
-                100% { background-position: 200% 50%; }
-            }
-            </style>
-        </section>
-
-        <section id="faq" class="section">
-            <h2>Frequently Asked Questions</h2>
-            <div class="faq-item">
-                <div class="faq-question">How does AK Admin compare to other admin scripts?</div>
-                <div class="faq-answer">AK Admin offers superior features, better stability, and regular updates that keep it ahead of other admin scripts including Mic Up scripts.</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">How does AK Admin compare to other Mic up scripts?</div>
-                    <div class="faq-answer">AK Admin offers a very smooth Reanimation for Mic up.</div>
-                    </div>
-            <div class="faq-item">
-            <div class="faq-question">Is AK Admin safe to use?</div>
-            <div class="faq-answer">Yes, AK Admin is designed with security in mind and regularly updated to maintain safety and effectiveness.</div>
-            </div>
-            <div class="faq-item">
-            <div class="faq-question">How often does AK Admin update?</div>
-            <div class="faq-answer">We provide regular updates to ensure compatibility and add new features consistently.</div>
-            </div>
-        </section>
-
-        <script>
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', () => {
-            const answer = question.nextElementSibling;
-            const isOpen = answer.style.display === 'block';
-
-            if (!isOpen) {
-            answer.style.display = 'block';
-            answer.style.animation = 'slideDown 0.3s ease forwards';
-            } else {
-            answer.style.animation = 'slideUp 0.3s ease forwards';
-            setTimeout(() => {
-                answer.style.display = 'none';
-            }, 300);
-            }
+    <script>
+        function initializeAnimations() {
+            gsap.to('.container', {opacity: 1, duration: 1, ease: "power2.out"});
+            
+            gsap.to('.hero h1', {opacity: 1, y: 0, duration: 1, delay: 0.3, ease: "power2.out"});
+            gsap.to('.hero p', {opacity: 1, y: 0, duration: 1, delay: 0.5, ease: "power2.out"});
+            
+            // Animate script section
+            gsap.to('.script-section', {opacity: 1, y: 0, duration: 1, delay: 0.7, ease: "power2.out"});
+            
+            gsap.to('.micup-section', {opacity: 1, y: 0, duration: 1, delay: 0.8, ease: "power2.out"});
+            
+            gsap.to('.faq-section', {opacity: 1, y: 0, duration: 1, delay: 0.9, ease: "power2.out"});
+            
+            gsap.to('.social-section', {opacity: 1, y: 0, duration: 1, delay: 1.1, ease: "power2.out"});
+            
+            gsap.to('footer', {opacity: 0.7, duration: 1, delay: 1.3, ease: "power2.out"});
+            
+            const glows = document.querySelectorAll('.glow');
+            glows.forEach((glow, index) => {
+                gsap.to(glow, {
+                    x: Math.sin(index) * 40,
+                    y: Math.cos(index) * 40,
+                    duration: 8,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
             });
+        }
+
+        function setupCopyButton() {
+            const copyBtn = document.getElementById('copyBtn');
+            const copyTooltip = document.querySelector('.copy-tooltip');
+            const copiedMessage = document.querySelector('.copied-message');
+            const scriptText = document.querySelector('.script-container pre').innerText;
+            
+            copyBtn.addEventListener('mouseenter', () => {
+                copyTooltip.classList.add('active');
+            });
+            
+            copyBtn.addEventListener('mouseleave', () => {
+                copyTooltip.classList.remove('active');
+            });
+            
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(scriptText).then(() => {
+                    copiedMessage.classList.add('active');
+                    
+                    setTimeout(() => {
+                        copiedMessage.classList.remove('active');
+                    }, 1500);
+                });
+            });
+        }
+
+        function setupDropdowns() {
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            
+            dropdownItems.forEach(item => {
+                const header = item.querySelector('.dropdown-header');
+                
+                header.addEventListener('click', () => {
+                    const currentlyActive = document.querySelector('.dropdown-item.active');
+                    
+                    if (currentlyActive && currentlyActive !== item) {
+                        currentlyActive.classList.remove('active');
+                    }
+                    
+                    item.classList.toggle('active');
+                });
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAnimations();
+            setupCopyButton();
+            setupDropdowns();
         });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-            });
-            });
-        });
-
-        // Add these animations to your existing style section
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes slideUp {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
-            }
-            .faq-answer {
-            display: none;
-            padding: 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 0 0 12px 12px;
-            margin-top: 2px;
-            color: #a8b2c1;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
-</body></div>
+</body>
 </html>
